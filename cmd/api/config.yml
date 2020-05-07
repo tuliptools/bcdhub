@@ -66,3 +66,9 @@ api:
         - carthagenet
         - zeronet
         - babylonnet
+
+rabbitmq:
+    uri: "amqp://${RABBIT_USER}:${RABBIT_PASSWORD}@mq:5672/"
+    queues:
+        - operations
+        - recalc
