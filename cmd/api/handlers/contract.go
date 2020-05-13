@@ -24,7 +24,8 @@ func (ctx *Context) GetContract(c *gin.Context) {
 	if handleError(c, err, 0) {
 		return
 	}
-	res, err := ctx.setProfileInfo(cntr)
+
+	res, err := ctx.setProfileInfo(cntr, CurrentUserID(c))
 	if handleError(c, err, 0) {
 		return
 	}
@@ -48,16 +49,16 @@ func (ctx *Context) GetRandomContract(c *gin.Context) {
 	}
 }
 
-func (ctx *Context) setProfileInfo(contract models.Contract) (Contract, error) {
+func (ctx *Context) setProfileInfo(contract models.Contract, userID uint) (Contract, error) {
 	res := Contract{
 		Contract: &contract,
 	}
-	if ctx.OAUTH.UserID == 0 {
+	if userID == 0 {
 		return res, nil
 	}
 
 	profile := ProfileInfo{}
-	_, err := ctx.DB.GetSubscription(res.ID, "contract")
+	_, err := ctx.DB.GetSubscription(res.Address, res.Network)
 	if err == nil {
 		profile.Subscribed = true
 	} else {
